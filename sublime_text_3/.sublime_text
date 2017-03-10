@@ -1,0 +1,25 @@
+{
+	"always_show_minimap_viewport": true,
+	"animation_enabled": false,
+	"caret_extra_bottom": 3,
+	"caret_extra_top": 3,
+	"caret_extra_width": 3,
+	"caret_style": "phase",
+	"dictionary": "Packages/Language - French - Français/fr_FR.dic",
+	"fade_fold_buttons": true,
+	"font_face": "Consolas",
+	"font_size": 14,
+	"highlight_line": false,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"line_padding_bottom": 3,
+	"line_padding_top": 3,
+	"margin": 0,
+	"overlay_scroll_bars": "disabled",
+	"tab_size": 4,
+	"tree_animation_enabled": false,
+	"color_scheme": "Packages/Theme - One Dark/One Dark.tmTheme",
+	"theme": "One Dark.sublime-theme"
+}
