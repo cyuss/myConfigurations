@@ -155,3 +155,13 @@
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+;; highlight surrounding parentheses
+(define-globalized-minor-mode global-highlight-parentheses-mode
+	highlight-parentheses-mode
+	(lambda ()
+		(highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)
+
+;; highlight current line
+(global-hl-line-mode +1)
