@@ -8,8 +8,14 @@
              '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; add elpy repo
+(add-to-list 'package-archives
+	        '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
 (package-initialize)
+;; enable elpy package
+;; packages to install: rope, jedi, flake8, importmagic, autopep8 and yapf
+(elpy-enable)
 
 (require 'cl)
 ;; change custom file configuration
