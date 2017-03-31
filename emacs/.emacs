@@ -47,8 +47,10 @@
                           clojure-mode
                           coffee-mode
                           csharp-mode
+                          dashboard
                           deft
                           erlang
+                          expand-region
                           feature-mode
                           flycheck
                           gist
@@ -60,9 +62,16 @@
                           haskell-mode
                           htmlize
                           idris-mode
+                          iedit
+                          latex-extra
+                          latex-preview-pane
                           magit
                           markdown-mode
+                          markdown-mode
+                          markdown-mode+
+                          markdown-toc
                           marmalade
+                          multiple-cursors
                           nodejs-repl
                           o-blog
                           org
@@ -77,11 +86,7 @@
                           solarized-theme
                           web-mode
                           writegood-mode
-                          yaml-mode
-                          iedit
-                          multiple-cursors
-                          expand-region
-                          dashboard)
+                          yaml-mode)
   "Default packages")
 
 ;; auto install default packages
