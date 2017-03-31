@@ -84,6 +84,7 @@
                           smex
                           sml-mode
                           solarized-theme
+                          use-package
                           web-mode
                           writegood-mode
                           yaml-mode)
