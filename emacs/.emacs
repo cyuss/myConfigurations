@@ -77,7 +77,11 @@
                           solarized-theme
                           web-mode
                           writegood-mode
-                          yaml-mode)
+                          yaml-mode
+                          iedit
+                          multiple-cursors
+                          expand-region
+                          dashboard)
   "Default packages")
 
 ;; auto install default packages
@@ -110,9 +114,10 @@
 
 ;; indentation
 ;;(setq tab-width 4 indent-tabs-mode t)
-
 (setq-default tab-width 4)
+;;(setq py-indent-offset 4)
 ;;(setq-default tab-always-indent 'complete)
+
 (electric-indent-mode 1)
 ;;(setq python-indent-offset 4)
 
@@ -177,3 +182,24 @@
 
 ;; disable menu bar mode
 (menu-bar-mode -99)
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+
+;; windmove
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+
+;; multiple cursors
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;; iedit package
+(require 'iedit)
+
+;; expand region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
