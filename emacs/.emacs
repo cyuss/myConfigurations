@@ -213,3 +213,18 @@
 ;; configure ace-jum-mode
 (require 'ace-jump-mode)
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+;; helm customization
+(require 'helm)
+(require 'helm-config)
+
+;;(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key help-map (kbd "C-z") 'helm-select-action) ;; list actions
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-i") 'helm-swoop)
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+;;(helm-autoresize-mode 1) ;; active autoresize mode
+(global-set-key (kbd "M-y") 'helm-show-kill-ring) ;; list kill ring cases
+(global-set-key (kbd "C-c h o") 'helm-occur) ;; find pattern occurences
