@@ -259,3 +259,6 @@
 
 ;; scroll bar mode (disable)
 (scroll-bar-mode -1)
+
+;; rainbow identifiers mode - highlighting based on names
+(add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
