@@ -228,3 +228,34 @@
 ;;(helm-autoresize-mode 1) ;; active autoresize mode
 (global-set-key (kbd "M-y") 'helm-show-kill-ring) ;; list kill ring cases
 (global-set-key (kbd "C-c h o") 'helm-occur) ;; find pattern occurences
+
+;; ace-window package
+;;(require 'ace-window)
+;;(global-set-key (kbd "M-p") 'ace-window)
+
+;; key chords
+(require 'key-chord)
+;;(setq key-chord-two-keys-delay 0.1) ; default 0.1
+;;(setq key-chord-one-key-delay 0.2) ; default 0.2
+
+;;(key-chord-define-global "FF" 'find-file)
+(key-chord-define-global "df" 'forward-char)
+(key-chord-define-global "jk" 'backward-char)
+
+(key-chord-mode +1)
+
+;; keybindings for company mode
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+
+;; add some shortcuts to clean buffer and region
+(global-set-key (kbd "C-x M-t") 'cleanup-region)
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+;;(global-set-key (kbd "M-n") 'next-line)
+;;(global-set-key (kbd "M-p") 'previous-line)
+
+;; scroll bar mode (disable)
+(scroll-bar-mode -1)
