@@ -262,3 +262,5 @@
 
 ;; rainbow identifiers mode - highlighting based on names
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+
+(setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
