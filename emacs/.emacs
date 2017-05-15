@@ -269,6 +269,12 @@
 
 (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
 
+;; org mode with latex configuration
+(require 'org-latex)
+(setq org-export-latex-listings 'minted)
+(add-to-list 'org-export-latex-packages-alist '("" "minted"))
+(setq org-src-fontify-natively t)
+
 ;; add linum-highlight-current-line-number.el file to .emacs.d directory
 (require 'linum)
 
