@@ -270,11 +270,18 @@
 
 (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
 
-;; org mode with latex configuration
-(require 'org-latex)
-(setq org-export-latex-listings 'minted)
-(add-to-list 'org-export-latex-packages-alist '("" "minted"))
-(setq org-src-fontify-natively t)
+;; global org-mode configuration
+(require 'ox-latex)
+(require 'ox-html)
+
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
+
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; add linum-highlight-current-line-number.el file to .emacs.d directory
 (require 'linum)
