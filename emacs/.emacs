@@ -9,13 +9,13 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;; add elpy repo
-(add-to-list 'package-archives
-	        '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+;;(add-to-list 'package-archives
+;;	        '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
 (package-initialize)
 ;; enable elpy package
 ;; packages to install: rope, jedi, flake8, importmagic, autopep8 and yapf
-(elpy-enable)
+;;(elpy-enable)
 
 (require 'cl)
 ;; change custom file configuration
@@ -282,37 +282,3 @@
       org-latex-pdf-process
       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; add linum-highlight-current-line-number.el file to .emacs.d directory
-(require 'linum)
-
-(defvar linum-current-line 1 "Current line number.")
-(defvar linum-border-width 1 "Border width for linum.")
-
-(defface linum-current-line
-  `((t :inherit linum
-       :foreground "goldenrod"
-       :weight bold
-       ))
-  "Face for displaying the current line number."
-  :group 'linum)
-
-(defadvice linum-update (before advice-linum-update activate)
-  "Set the current line."
-  (setq linum-current-line (line-number-at-pos)
-        ;; It's the same algorithm that linum dynamic. I only had added one
-        ;; space in front of the first digit.
-        linum-border-width (number-to-string
-                            (+ 1 (length
-                                  (number-to-string
-                                   (count-lines (point-min) (point-max))))))))
-
-(defun linum-highlight-current-line (line-number)
-  "Highlight the current line number using `linum-current-line' face."
-  (let ((face (if (= line-number linum-current-line)
-                  'linum-current-line
-                'linum)))
-    (propertize (format (concat "%" linum-border-width "d") line-number)
-                'face face)))
-
-(setq linum-format 'linum-highlight-current-line)
