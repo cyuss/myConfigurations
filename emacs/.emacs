@@ -274,6 +274,12 @@
 (require 'ox-latex)
 (require 'ox-html)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((python . t)
+			     (latex . t)
+			     (sh . t)
+			     (C . t)))
+
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 
