@@ -41,7 +41,7 @@
  )
 
 ;; list of default packages
-(defvar packages_list '(ess
+(defvar cyuss/packages '(ess
 			haskell-mode
 			helm-core
 			ac-haskell-process
