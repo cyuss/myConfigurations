@@ -1,0 +1,160 @@
+#+TITLE: Emacs configuration
+#+AUTHOR: Cyuss
+
+* Emacs.el
+** Add repositories
+   add melpa and marmelade repositories,
+
+ #+BEGIN_SRC emacs-lisp
+ (load "package")
+ (load "cl")
+ (add-to-list 'package-archives
+              '("marmalade" . "https://marmalade-repo.org/packages/"))
+ (add-to-list 'package-archives
+              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+ #+END_SRC
+
+** use-package
+   Make sur that use-package is installed to continue the configuration, if not install it,
+
+ #+BEGIN_SRC emacs-lisp
+   (unless (package-installed-p 'use-package)
+     (package-refresh-contents)
+     (package-install 'use-package))
+   ;; enable use-package
+   (eval-when-compile
+     (require 'use-package))
+   (require 'diminish) ;; if we want to use :diminish
+   (require 'bind-key) ;; if we want to use :bind
+ #+END_SRC
+
+** Theme
+*** Solarized Theme
+    load default configuration
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package solarized-theme
+     :defer 10
+     :init
+     (setq solarized-use-variable-pitch nil)
+     :ensure t)
+ #+END_SRC
+
+** Helm
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package helm
+     :bind (("M-x" . helm-M-x)
+	    ("C-x b" . helm-mini)
+	    ("C-x C-f" . helm-find-files))
+ #+END_SRC
+
+** Useful functions
+   some useful functions for text manipulation
+
+*** Delete text inside of quotes
+    Deletes the text inside quotes,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--delete-in-quotes () "Deletes the text inside of quotes."
+	  (interactive)
+	  (search-backward-regexp "[\"\']" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  (forward-char)
+	  (let  ((lstart (point)))
+	    (search-forward-regexp "[\"\']" (line-end-position))
+	    (backward-char)
+	    (kill-region lstart (point))))
+ #+END_SRC
+
+*** Delete text within parentheses
+    Deletes the text within parentheses,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--delete-in-parentheses () "Deletes the text within parentheses."
+	  (interactive)
+	  (search-backward "(" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  (forward-char)
+	  (let  ((lstart (point)))
+	    (search-forward ")" (line-end-position))
+	    (backward-char)
+	    (kill-region lstart (point))))
+ #+END_SRC
+
+*** Delete text within brackets
+    Deletes the text within square brackets, angle brackets and curly brackets,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--delete-in-brackets () "Deletes the text within square brackets, angle brackets, and curly brackets."
+	  (interactive)
+	  (search-backward-regexp "[[{<]" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  (forward-char)
+	  (let ((lstart (point)))
+	    (search-forward-regexp "[]}>]" (line-end-position))
+	    (backward-char)
+	    (kill-region lstart (point))))
+ #+END_SRC
+
+*** Rename a file and buffer
+    Rename both current buffer and file it's visiting to new-name,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--rename-this-file-and-buffer (new-name)
+     "Renames both current buffer and file it's visiting to NEW-NAME."
+     (interactive "sNew name: ")
+     (let ((name (buffer-name))
+	   (filename (buffer-file-name)))
+       (unless filename
+	 (error "Buffer '%s' is not visiting a file!" name))
+       (if (get-buffer new-name)
+	   (message "A buffer named '%s' already exists!" new-name)
+	 (progn
+	   (rename-file name new-name 1)
+	   (rename-buffer new-name)
+	   (set-visited-file-name new-name)
+	   (set-buffer-modified-p nil)))))
+ #+END_SRC
+
+*** Insert date
+    Insert a time-stamp according to locale's date and time format,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--insert-date ()
+     "Insert a time-stamp according to locale's date and time format."
+     (interactive)
+     (insert (format-time-string "%c" (current-time))))
+ #+END_SRC
+
+*** generate numbered list
+    Creates a numbered list from provided start to provided end,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--generate-numbered-list (start end)
+     "Creates a numbered list from provided start to provided end."
+     (interactive "nStart num:\nnEnd num:")
+     (let ((x  start))
+       (while (<= x end)
+	 (insert (number-to-string x) ".")
+	 (newline)
+	 (setq x (+ x 1)))))
+ #+END_SRC
+
+*** Search all buffers
+    Search all open buffers for a regex. Open an occur-like window,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--search-all-buffers (regexp) "Search all open buffers for a regex. Open an occur-like window."
+	  (interactive "sRegexp: ")
+	  (multi-occur-in-matching-buffers "." regexp t))
+ #+END_SRC
+
+*** Make a temporary file
+    Creates a temporary file in the system temp directory,
+
+ #+BEGIN_SRC emacs-lisp
+   (defun cyuss--make-temp-file (name)
+     "Creates a temporary file in the system temp directory, for various purposes."
+     (interactive "sFile name:")
+     (generate-new-buffer name)
+     (switch-to-buffer name)
+     (write-file (concat temporary-file-directory name)))
+ #+END_SRC
