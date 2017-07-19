@@ -2,22 +2,22 @@
 #+AUTHOR: Cyuss
 
 * Emacs.el
-** Add repositories
+** Starting up
    add melpa and marmelade repositories,
-
- #+BEGIN_SRC emacs-lisp
- (load "package")
- (load "cl")
- (add-to-list 'package-archives
-              '("marmalade" . "https://marmalade-repo.org/packages/"))
- (add-to-list 'package-archives
-              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (load "package")
+   (load "cl")
+   (unless (assoc-default "marmalade" package-archives)
+     (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t))
+   (unless (assoc-default "melpa" package-archives)
+     (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+   (unless (assoc-default "org" package-archives)
+     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
  #+END_SRC
-
+ 
 ** use-package
    Make sur that use-package is installed to continue the configuration, if not install it,
-
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (unless (package-installed-p 'use-package)
      (package-refresh-contents)
      (package-install 'use-package))
@@ -28,11 +28,268 @@
    (require 'bind-key) ;; if we want to use :bind
  #+END_SRC
 
+** Customization
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq custom-file "~/.emacs.d/custom-settings.el")
+  (load custom-file t)
+#+END_SRC
+
+** Backups
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq version-control t)
+(setq delete-old-versions -1)
+#+END_SRC
+
+** Start buffers
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq inhibit-splash-screen t
+      initial-scratch-message nil
+      initial-major-mode 'org-mode)
+#+END_SRC
+
+** Windows
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (tool-bar-mode -1)
+  (display-time-mode 1)
+  (menu-bar-mode -99)
+  (scroll-bar-mode -1)
+#+END_SRC
+
+** Font
+
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (set-default-font "Consolas-12") 
+ #+END_SRC
+
+** Highlight surrounding parentheses
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (define-globalized-minor-mode global-highlight-parentheses-mode
+    highlight-parentheses-mode
+    (lambda ()
+      (highlight-parentheses-mode t)))
+  (global-highlight-parentheses-mode t)
+#+END_SRC
+
+** Change "yes or no" to "y or n"
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Electric pair
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun electric-pair ()
+    "If at end of line, insert character pair without surrounding spaces. Otherwise, just insert the typed character."
+    (interactive)
+    (if (eolp) (let (parens-require-spaces) (insert-pair)) (self-insert-command 1)))
+#+END_SRC
+
+** End line marker
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq-default indicate-empty-lines t)
+(when (not indicate-empty-lines)
+  (toggle-indicate-empty-lines))
+#+END_SRC
+
+** Miniedit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package miniedit
+    :commands minibuffer-edit
+    :ensure t
+    :init (miniedit-install))
+#+END_SRC
+
+** Python
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package python
+    :ensure t
+    :mode ("\\.py" . python-mode)
+    :config ((add-hook 'python-mode-hook 'jedi-setup)
+	     (setq jedi:setup-keys t)
+	     (setq jedi:complete-on-dot t)
+	     (setq py-indent-offset 4)
+    )
+#+END_SRC
+
+** Column number mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq-default column-number-mode t)
+#+END_SRC
+
+** Windmove
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+#+END_SRC
+
+** Multiple cursors
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package multiple-cursors
+  :defer t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+	 ("C->" . mc/mark-next-like-this)
+	 ("C-<" . mc/mark-previous-like-this)
+	 ("C-c C-<" . mc/mark-all-like-this))
+  )
+#+END_SRC
+
+** Ace multiple cursors
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package ace-mc
+  :defer t
+  :bind (("C-)" . ace-mc-add-multiple-cursors)
+	 ("C-M-)" . ace-mc-add-single-cursor))
+  )
+#+END_SRC
+
+** Iedit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package iedit
+  :defer t)
+#+END_SRC
+
+** Expand region
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package expand-region
+  :defer t
+  :bind ("C-=" . er/expand-region))
+#+END_SRC
+
+** Ace jump mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package ace-jump-mode
+  :defer t
+  :bind (("C-c C-SPC" . ace-jump-mode))
+  )
+#+END_SRC
+
+** Ace window
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package ace-window
+  :defer t
+  :bind (("M-p" . ace-window))
+  )
+#+END_SRC
+
+** Key chord
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (require 'key-chord)
+  ;;(setq key-chord-two-keys-delay 0.1) ; default 0.1
+  ;;(setq key-chord-one-key-delay 0.2) ; default 0.2
+  (key-chord-mode +1)
+  (key-chord-define-global "df" 'forward-char)
+  (key-chord-define-global "jk" 'backward-char)
+#+END_SRC
+
+** Company
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package company
+    :config (add-hook 'prog-mode-hook 'company-mode)
+    :bind (("C-," . company-complete-common)
+	   :map company-active-map
+	   ("C-n" . company-select-next)
+	   ("C-p" . company-select-previous))
+    )
+#+END_SRC
+
+** Magit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package magit
+  :defer t
+  ;;:ensure t
+  :bind ("C-x g" . magit-status))
+#+END_SRC
+
+** rainbow identifiers mode
+   rainbow identifiers mode is highlighting mode based on names
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+  ;; configuration
+  (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
+#+END_SRC
+
+** Org-mode
+*** Org
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package org
+    :defer t
+    :mode ("\\.org" . org-mode)
+    :bind (("C-c a" . org-agenda)
+	   ("C-c b" . org-iswitchb))
+    :config
+    (setq org-src-window-setup 'current-window)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (latex . t)
+       (sh . t)
+       (C . t)
+       (awk . t)
+       (R . t)))
+    )
+#+END_SRC
+
+*** Ox-latex
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (use-package ox-latex
+    :defer t
+    :config
+    (setq org-latex-listings 'minted
+	  org-latex-packages-alist '(("" "minted"))
+	  org-latex-pdf-process
+	  '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+    )
+#+END_SRC
+
+*** Ox-html
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+(use-package ox-html
+  :defer t)
+#+END_SRC
+
 ** Theme
 *** Solarized Theme
     load default configuration
 
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package solarized-theme
      :defer 10
      :init
@@ -41,12 +298,33 @@
  #+END_SRC
 
 ** Helm
-
- #+BEGIN_SRC emacs-lisp
+   
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package helm
+     :diminish helm-mode
+     :init
+     (progn
+       (require 'helm-config)
+       (setq helm-candidate-number-limit 100)
+       (setq helm-idle-delay 0.0
+	     helm-input-idle-delay 0.01
+	     helm-quick-update t
+	     helm-M-x-requires-pattern nil
+	     helm-ff-skip-boring-files t)
+       (helm-mode))
      :bind (("M-x" . helm-M-x)
 	    ("C-x b" . helm-mini)
-	    ("C-x C-f" . helm-find-files))
+	    ("C-x C-f" . helm-find-files)
+	    ("M-i" . helm-swoop)
+	    ("M-y" . helm-show-kill-ring)
+	    ("C-c h o" . helm-occur)
+	    ("M-D" . helm-buffer-run-kill-buffers)
+	    :map helm-map
+	    ("<tab>" . helm-execute-persistent-action)
+	    ("C-<tab>" . helm-select-action)
+	    :map isearch-mode-map
+	    ("M-i" . helm-swoop-from-isearch))
+     )
  #+END_SRC
 
 ** Useful functions
@@ -55,10 +333,12 @@
 *** Delete text inside of quotes
     Deletes the text inside quotes,
 
- #+BEGIN_SRC emacs-lisp
-   (defun cyuss--delete-in-quotes () "Deletes the text inside of quotes."
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (defun cyuss--delete-in-quotes () 
+     "Deletes the text inside of quotes."
 	  (interactive)
-	  (search-backward-regexp "[\"\']" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  ;; Search for a match on the same line, don't delete across lines
+	  (search-backward-regexp "[\"\']" (line-beginning-position))
 	  (forward-char)
 	  (let  ((lstart (point)))
 	    (search-forward-regexp "[\"\']" (line-end-position))
@@ -69,10 +349,12 @@
 *** Delete text within parentheses
     Deletes the text within parentheses,
 
- #+BEGIN_SRC emacs-lisp
-   (defun cyuss--delete-in-parentheses () "Deletes the text within parentheses."
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (defun cyuss--delete-in-parentheses () 
+     "Deletes the text within parentheses."
 	  (interactive)
-	  (search-backward "(" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  ;; Search for a match on the same line, don't delete across lines
+	  (search-backward "(" (line-beginning-position))
 	  (forward-char)
 	  (let  ((lstart (point)))
 	    (search-forward ")" (line-end-position))
@@ -83,10 +365,12 @@
 *** Delete text within brackets
     Deletes the text within square brackets, angle brackets and curly brackets,
 
- #+BEGIN_SRC emacs-lisp
-   (defun cyuss--delete-in-brackets () "Deletes the text within square brackets, angle brackets, and curly brackets."
+ #+BEGIN_SRC emacs-lisp :tangle yes
+   (defun cyuss--delete-in-brackets () 
+     "Deletes the text within square brackets, angle brackets, and curly brackets."
 	  (interactive)
-	  (search-backward-regexp "[[{<]" (line-beginning-position)) ;; Search for a match on the same line, don't delete across lines
+	  ;; Search for a match on the same line, don't delete across lines
+	  (search-backward-regexp "[[{<]" (line-beginning-position))
 	  (forward-char)
 	  (let ((lstart (point)))
 	    (search-forward-regexp "[]}>]" (line-end-position))
@@ -97,7 +381,7 @@
 *** Rename a file and buffer
     Rename both current buffer and file it's visiting to new-name,
 
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (defun cyuss--rename-this-file-and-buffer (new-name)
      "Renames both current buffer and file it's visiting to NEW-NAME."
      (interactive "sNew name: ")
@@ -117,7 +401,7 @@
 *** Insert date
     Insert a time-stamp according to locale's date and time format,
 
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (defun cyuss--insert-date ()
      "Insert a time-stamp according to locale's date and time format."
      (interactive)
@@ -127,12 +411,12 @@
 *** generate numbered list
     Creates a numbered list from provided start to provided end,
 
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (defun cyuss--generate-numbered-list (start end)
      "Creates a numbered list from provided start to provided end."
      (interactive "nStart num:\nnEnd num:")
      (let ((x  start))
-       (while (<= x end)
+     '  (while (<= x end)
 	 (insert (number-to-string x) ".")
 	 (newline)
 	 (setq x (+ x 1)))))
@@ -142,7 +426,8 @@
     Search all open buffers for a regex. Open an occur-like window,
 
  #+BEGIN_SRC emacs-lisp
-   (defun cyuss--search-all-buffers (regexp) "Search all open buffers for a regex. Open an occur-like window."
+   (defun cyuss--search-all-buffers (regexp) 
+     "Search all open buffers for a regex. Open an occur-like window."
 	  (interactive "sRegexp: ")
 	  (multi-occur-in-matching-buffers "." regexp t))
  #+END_SRC
@@ -150,7 +435,7 @@
 *** Make a temporary file
     Creates a temporary file in the system temp directory,
 
- #+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp :tangle yes
    (defun cyuss--make-temp-file (name)
      "Creates a temporary file in the system temp directory, for various purposes."
      (interactive "sFile name:")
@@ -158,3 +443,32 @@
      (switch-to-buffer name)
      (write-file (concat temporary-file-directory name)))
  #+END_SRC
+*** Indentation and buffer cleanup
+    some functions to indent and clean up buffers
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun untabify-buffer ()
+    (interactive)
+    (untabify (point-min) (point-max)))
+
+  (defun indent-buffer ()
+    (interactive)
+    (indent-region (point-min) (point-max)))
+
+  (defun cleanup-buffer ()
+    "Perform a bunch of operations on the whitespace content of a buffer."
+    (interactive)
+    (indent-buffer)
+    (untabify-buffer)
+    (delete-trailing-whitespace))
+
+  (defun cleanup-region (beg end)
+    "Remove tmux artifacts from region."
+    (interactive "r")
+    (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
+      (replace-regexp re "" nil beg end)))
+
+  ;; add some shortcuts to clean buffer and region
+  (global-set-key (kbd "C-x M-t") 'cleanup-region)
+  (global-set-key (kbd "C-c n") 'cleanup-buffer)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
