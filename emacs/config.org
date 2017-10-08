@@ -118,7 +118,7 @@
 	     (setq jedi:setup-keys t)
 	     (setq jedi:complete-on-dot t)
 	     (setq py-indent-offset 4)
-    )
+    ))
 #+END_SRC
 
 ** Column number mode
