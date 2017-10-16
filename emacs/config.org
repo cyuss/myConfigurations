@@ -124,6 +124,15 @@
     ))
 #+END_SRC
 
+** Anzu
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package anzu
+  :init (global-anzu-mode 1)
+  :diminish anzu-mode
+  :ensure t)
+#+END_SRC
+
 ** Column number mode
 
 #+BEGIN_SRC emacs-lisp :tangle yes
