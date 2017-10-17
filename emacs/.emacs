@@ -722,3 +722,10 @@
       org-latex-pdf-process
       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+(defun my/python-setup ()
+  (interactive)
+  (company-mode 1)
+  (jedi:setup)
+  (company-jedi 1)
+  (local-set-key (kbd "C-,") 'company-jedi))
