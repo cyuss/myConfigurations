@@ -420,7 +420,7 @@
      (insert (format-time-string "%c" (current-time))))
  #+END_SRC
 
-*** generate numbered list
+*** Generate numbered list
     Creates a numbered list from provided start to provided end,
 
  #+BEGIN_SRC emacs-lisp :tangle yes
