@@ -121,6 +121,8 @@
 	     (setq jedi:setup-keys t)
 	     (setq jedi:complete-on-dot t)
 	     (setq py-indent-offset 4)
+	     (setq py-python-command "python3") ;; let emacs use python3
+	     (setq org-babel-python-command "python3")
     ))
 #+END_SRC
 
@@ -223,7 +225,10 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
 
   (use-package company
-    :config (add-hook 'prog-mode-hook 'company-mode)
+    :config 
+    	(add-hook 'prog-mode-hook 'company-mode)
+      	(company-quickhelp-mode 1)
+    :ensure t
     :bind (("C-," . company-complete-common)
 	   :map company-active-map
 	   ("C-n" . company-select-next)
@@ -237,7 +242,7 @@
 
 (use-package magit
   :defer t
-  ;;:ensure t
+  :ensure t
   :bind ("C-x g" . magit-status))
 #+END_SRC
 
@@ -263,9 +268,23 @@
 	   ("C-c b" . org-iswitchb))
     :config
     (setq org-src-window-setup 'current-window)
+    (setq org-src-fontify-natively t)
+    (defface org-block-begin-line
+    	'((t (:underline "#A7A6AA" :foreground "#54bfa8")))
+    	"Face used for the line delimiting the begin of source blocks.")
+
+    (defface org-block-background
+    	'((t (:background "#FFFFEA")))
+    	"Face used for the source block background.")
+
+    (defface org-block-end-line
+    	'((t (:overline "#A7A6AA" :foreground "#54bfa8")))
+    	"Face used for the line delimiting the end of source blocks.")
+
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((python . t)
+       (ipython . t)
        (latex . t)
        (sh . t)
        (C . t)
