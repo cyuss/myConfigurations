@@ -3,541 +3,40 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
-
-(add-to-list 'package-archives
-             '("marmalade" . "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; add elpy repo
-;;(add-to-list 'package-archives
-;;	        '("elpy" . "https://jorgenschaefer.github.io/packages/"))
-
-(package-initialize)
-;; enable elpy package
-;; packages to install: rope, jedi, flake8, importmagic, autopep8 and yapf
-;;(elpy-enable)
-
+(load "package")
 (require 'cl)
-;; change custom file configuration
-(setq custom-file "~/.emacs-custom.el")
-(load "~/.emacs-custom.el")
 
+(unless (assoc-default "marmalade" package-archives)
+  (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t))
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+(unless (assoc-default "org" package-archives)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
 
-;; default font
-(set-default-font "Consolas 16")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (yaml-mode writegood-mode web-mode vala-mode solarized-theme sml-mode smex scala-mode rvm restclient puppet-mode php-mode paredit o-blog nodejs-repl marmalade markdown-mode magit idris-mode htmlize highlight-parentheses haskell-mode haml-mode graphviz-dot-mode go-eldoc go-autocomplete gist flycheck feature-mode expand-region erlang elpy deft csharp-mode coffee-mode clojure-mode autopair auctex ac-slime))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-;; list of default packages
-(defvar cyuss/packages '(ess
-			haskell-mode
-			helm-core
-			ac-haskell-process
-			ac-helm
-			ac-js2
-			ace-jump-helm-line
-			ace-mc
-			ace-jump-mode
-			ace-window
-			ack
-			all-the-icons
-			anaconda-mode
-			anzu
-			atom-one-dark-theme
-			auctex-latexmk
-			autopair
-			avy
-			babel
-			color-identifiers-mode
-			color-theme
-			company-auctex
-			company-ghci
-			company-go
-			company-jedi
-			company-shell
-			company-tern
-			company-web
-			company-ycmd
-			csv
-			csv-mode
-			csv-nav
-			dashboard
-			elpy
-			emlib
-			ensime
-			epm
-			ess
-			esup
-			expand-region
-			find-file-in-project
-			font-lock+
-			git
-			git-gutter
-			git-gutter-fringe+
-			fringe-helper
-			git-gutter+
-			go-mode
-			haskell-mode
-			helm-company
-			company
-			helm-dictionary
-			helm-pydoc
-			helm-swoop
-			helm
-			helm-core
-			highlight-indentation
-			highlight-parentheses
-			hlinum
-			htmlize
-			iedit
-			ivy
-			jedi-core
-			epc
-			ctable
-			concurrent
-			js-auto-beautify
-			js3-mode
-			json-mode
-			json-reformat
-			json-rpc
-			json-snatcher
-			julia-mode
-			key-chord
-			latex-extra
-			auctex
-			latex-math-preview
-			latex-pretty-symbols
-			latex-preview-pane
-			ledger-mode
-			logview
-			datetime
-			magit
-			git-commit
-			magit-popup
-			markdown-mode+
-			markdown-preview-eww
-			markdown-preview-mode
-			markdown-toc
-			markdown-mode
-			matlab-mode
-			memoize
-			multi-web-mode
-			multiple-cursors
-			mustache
-			ht
-			nav
-			nav-flash
-			neotree
-			npm-mode
-			ob-applescript
-			org-ac
-			auto-complete-pcmp
-			log4e
-			org-beautify-theme
-			org-bullets
-			org-cua-dwim
-			org-jekyll
-			org-trello
-			dash-functional
-			ox-html5slide
-			org
-			page-break-lines
-			paredit
-			projectile
-			py-isort
-			python-environment
-			python-mode
-			pythonic
-			f
-			pyvenv
-			rainbow-identifiers
-			sbt-mode
-			scala-mode
-			skewer-mode
-			js2-mode
-			simple-httpd
-			smart-mode-line-powerline-theme
-			smart-mode-line
-			rich-minority
-			powerline
-			smex
-			solarized-theme
-			spacemacs-theme
-			sublimity
-			tern-auto-complete
-			auto-complete
-			popup
-			tern
-			use-package
-			diminish
-			bind-key
-			uuidgen
-			web-beautify
-			web-completion-data
-			web-mode
-			web-server
-			websocket
-			with-editor
-			async
-			yaml-mode
-			yasnippet
-			yaxception
-			ycmd
-			pkg-info
-			epl
-			request-deferred
-			request
-			deferred
-			s
-			dash))/packages '(ess
-			haskell-mode
-			helm-core
-			ac-haskell-process
-			ac-helm
-			ac-js2
-			ace-jump-helm-line
-			ace-mc
-			ace-jump-mode
-			ace-window
-			ack
-			all-the-icons
-			anaconda-mode
-			anzu
-			atom-one-dark-theme
-			auctex-latexmk
-			autopair
-			avy
-			babel
-			color-identifiers-mode
-			color-theme
-			company-auctex
-			company-ghci
-			company-go
-			company-jedi
-			company-shell
-			company-tern
-			company-web
-			company-ycmd
-			csv
-			csv-mode
-			csv-nav
-			dashboard
-			elpy
-			emlib
-			ensime
-			epm
-			ess
-			esup
-			expand-region
-			find-file-in-project
-			font-lock+
-			git
-			git-gutter
-			git-gutter-fringe+
-			fringe-helper
-			git-gutter+
-			go-mode
-			haskell-mode
-			helm-company
-			company
-			helm-dictionary
-			helm-pydoc
-			helm-swoop
-			helm
-			helm-core
-			highlight-indentation
-			highlight-parentheses
-			hlinum
-			htmlize
-			iedit
-			ivy
-			jedi-core
-			epc
-			ctable
-			concurrent
-			js-auto-beautify
-			js3-mode
-			json-mode
-			json-reformat
-			json-rpc
-			json-snatcher
-			julia-mode
-			key-chord
-			latex-extra
-			auctex
-			latex-math-preview
-			latex-pretty-symbols
-			latex-preview-pane
-			ledger-mode
-			logview
-			datetime
-			magit
-			git-commit
-			magit-popup
-			markdown-mode+
-			markdown-preview-eww
-			markdown-preview-mode
-			markdown-toc
-			markdown-mode
-			matlab-mode
-			memoize
-			multi-web-mode
-			multiple-cursors
-			mustache
-			ht
-			nav
-			nav-flash
-			neotree
-			npm-mode
-			ob-applescript
-			org-ac
-			auto-complete-pcmp
-			log4e
-			org-beautify-theme
-			org-bullets
-			org-cua-dwim
-			org-jekyll
-			org-trello
-			dash-functional
-			ox-html5slide
-			org
-			page-break-lines
-			paredit
-			projectile
-			py-isort
-			python-environment
-			python-mode
-			pythonic
-			f
-			pyvenv
-			rainbow-identifiers
-			sbt-mode
-			scala-mode
-			skewer-mode
-			js2-mode
-			simple-httpd
-			smart-mode-line-powerline-theme
-			smart-mode-line
-			rich-minority
-			powerline
-			smex
-			solarized-theme
-			spacemacs-theme
-			sublimity
-			tern-auto-complete
-			auto-complete
-			popup
-			tern
-			use-package
-			diminish
-			bind-key
-			uuidgen
-			web-beautify
-			web-completion-data
-			web-mode
-			web-server
-			websocket
-			with-editor
-			async
-			yaml-mode
-			yasnippet
-			yaxception
-			ycmd
-			pkg-info
-			epl
-			request-deferred
-			request
-			deferred
-			s
-			dash)
-  "Default packages")
-
-;; auto install default packages
-(defun packages-installed-p ()
-  (loop for pkg in cyuss/packages
-        when (not (package-installed-p pkg)) do (return nil)
-        finally (return t)))
-
-(unless (packages-installed-p)
-  (message "%s" "Refreshing package database...")
+;; use-package installation
+(unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (dolist (pkg (defvar packages_list '(ess
-			haskell-mode
-			helm-core
-			ac-haskell-process
-			ac-helm
-			ac-js2
-			ace-jump-helm-line
-			ace-mc
-			ace-jump-mode
-			ace-window
-			ack
-			all-the-icons
-			anaconda-mode
-			anzu
-			atom-one-dark-theme
-			auctex-latexmk
-			autopair
-			avy
-			babel
-			color-identifiers-mode
-			color-theme
-			company-auctex
-			company-ghci
-			company-go
-			company-jedi
-			company-shell
-			company-tern
-			company-web
-			company-ycmd
-			csv
-			csv-mode
-			csv-nav
-			dashboard
-			elpy
-			emlib
-			ensime
-			epm
-			ess
-			esup
-			expand-region
-			find-file-in-project
-			font-lock+
-			git
-			git-gutter
-			git-gutter-fringe+
-			fringe-helper
-			git-gutter+
-			go-mode
-			haskell-mode
-			helm-company
-			company
-			helm-dictionary
-			helm-pydoc
-			helm-swoop
-			helm
-			helm-core
-			highlight-indentation
-			highlight-parentheses
-			hlinum
-			htmlize
-			iedit
-			ivy
-			jedi-core
-			epc
-			ctable
-			concurrent
-			js-auto-beautify
-			js3-mode
-			json-mode
-			json-reformat
-			json-rpc
-			json-snatcher
-			julia-mode
-			key-chord
-			latex-extra
-			auctex
-			latex-math-preview
-			latex-pretty-symbols
-			latex-preview-pane
-			ledger-mode
-			logview
-			datetime
-			magit
-			git-commit
-			magit-popup
-			markdown-mode+
-			markdown-preview-eww
-			markdown-preview-mode
-			markdown-toc
-			markdown-mode
-			matlab-mode
-			memoize
-			multi-web-mode
-			multiple-cursors
-			mustache
-			ht
-			nav
-			nav-flash
-			neotree
-			npm-mode
-			ob-applescript
-			org-ac
-			auto-complete-pcmp
-			log4e
-			org-beautify-theme
-			org-bullets
-			org-cua-dwim
-			org-jekyll
-			org-trello
-			dash-functional
-			ox-html5slide
-			org
-			page-break-lines
-			paredit
-			projectile
-			py-isort
-			python-environment
-			python-mode
-			pythonic
-			f
-			pyvenv
-			rainbow-identifiers
-			sbt-mode
-			scala-mode
-			skewer-mode
-			js2-mode
-			simple-httpd
-			smart-mode-line-powerline-theme
-			smart-mode-line
-			rich-minority
-			powerline
-			smex
-			solarized-theme
-			spacemacs-theme
-			sublimity
-			tern-auto-complete
-			auto-complete
-			popup
-			tern
-			use-package
-			diminish
-			bind-key
-			uuidgen
-			web-beautify
-			web-completion-data
-			web-mode
-			web-server
-			websocket
-			with-editor
-			async
-			yaml-mode
-			yasnippet
-			yaxception
-			ycmd
-			pkg-info
-			epl
-			request-deferred
-			request
-			deferred
-			s
-			dash))/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
+  (package-install 'use-package))
+;; enable use-package
+(eval-when-compile
+  (require 'use-package))
+;;(require 'diminish) ;; if we want to use :diminish
+(require 'bind-key) ;; if we want to use :bind
 
-;; skip straight to scratch buffer
+(setq custom-file "~/.emacs.d/custom-settings.el")
+(load custom-file t)
+
+(set-default-font "Consolas-15")
+
+;; theme installation
+(use-package solarized-theme
+  :ensure t
+  :defer 10
+  :init
+  (setq solarized-use-variable-pitch nil)
+)
+
+;; start buffers
 (setq inhibit-splash-screen t
       initial-scratch-message nil
       initial-major-mode 'org-mode)
@@ -551,35 +50,39 @@
 (setq-default indicate-empty-lines t)
 (when (not indicate-empty-lines)
   (toggle-indicate-empty-lines))
+(progn
+  (define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
+  (setcdr (assq 'empty-line fringe-indicator-alist) 'tilde))
 
 ;; indentation
-;;(setq tab-width 4 indent-tabs-mode t)
-(setq-default tab-width 4)
-;;(setq py-indent-offset 4)
-;;(setq-default tab-always-indent 'complete)
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq indent-tabs-mode t)
+        (setq tab-width 4)
+        (setq python-indent 4)))
+
+;; every time when neotree window is opened, let it find current file and jump to node
+(setq neo-smart-open t)
 
 (electric-indent-mode 1)
-;;(setq python-indent-offset 4)
 
 ;; backup files
-(setq make-backup-files nil)
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq version-control t)
+(setq delete-old-versions -1)
 
 ;; yes and no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; key bindings
-(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-!") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; misc
 (show-paren-mode t)
-
-;; Ido: navigate filesystem
-(ido-mode t)
-(setq ido-enable-flex-matching t
-      ido-use-virtual-buffers t)
 
 ;; column number mode
 (setq column-number-mode t)
@@ -592,140 +95,210 @@
 (require 'auto-complete-config)
 (ac-config-default)
 
-;; indentation and cleanup buffer
-(defun untabify-buffer ()
-  (interactive)
-  (untabify (point-min) (point-max)))
-
-(defun indent-buffer ()
-  (interactive)
-  (indent-region (point-min) (point-max)))
-
-;; smex
-(setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-;; highlight surrounding parentheses
-(define-globalized-minor-mode global-highlight-parentheses-mode
-	highlight-parentheses-mode
-	(lambda ()
-		(highlight-parentheses-mode t)))
-(global-highlight-parentheses-mode t)
-
 ;; highlight current line
 (global-hl-line-mode +1)
 
-;; disable tool bar mode
+;; windows configuration
 (tool-bar-mode -1)
-
-;; disable menu bar mode
+(display-time-mode 1)
 (menu-bar-mode -99)
+(scroll-bar-mode -1)
 
-(require 'dashboard)
-(dashboard-setup-startup-hook)
+;; highlight surrounding parentheses
+(define-globalized-minor-mode global-highlight-parentheses-mode
+  highlight-parentheses-mode
+  (lambda ()
+	(highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)
 
-;; windmove
+;; miniedit
+(use-package miniedit
+  :commands minibuffer-edit
+  :ensure t
+  :init (miniedit-install))
+
+(use-package anzu
+  :init (global-anzu-mode 1)
+  :diminish anzu-mode
+  :ensure t)
+
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
 ;; multiple cursors
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(use-package multiple-cursors
+  :defer t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+		 ("C->" . mc/mark-next-like-this)
+		 ("C-<" . mc/mark-previous-like-this)
+		 ("C-c C-<" . mc/mark-all-like-this))
+  )
 
-(require 'ace-mc)
-(global-set-key (kbd "C-)") 'ace-mc-add-multiple-cursors)
-(global-set-key (kbd "C-M-)") 'ace-mc-add-single-cursor)
+;; ace multiple cursors
+(use-package ace-mc
+  :defer t
+  :bind (("C-)" . ace-mc-add-multiple-cursors)
+		 ("C-M-)" . ace-mc-add-single-cursor))
+  )
 
-;; iedit package
-(require 'iedit)
+;; iedit
+(use-package iedit
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; expand region
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+(use-package expand-region
+  :defer t
+  :bind ("C-=" . er/expand-region))
 
-;; configure ace-jum-mode
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;; ace jump mode
+(use-package ace-jump-mode
+  :defer t
+  :bind (("C-c SPC" . ace-jump-mode))
+  )
 
-;; helm customization
-(require 'helm)
-(require 'helm-config)
+;; ace window
+(use-package ace-window
+  :ensure
+  ;;:defer t
+  :bind (("M-p" . ace-window))
+  )
 
-;;(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-(define-key help-map (kbd "C-z") 'helm-select-action) ;; list actions
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-i") 'helm-swoop)
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-;;(helm-autoresize-mode 1) ;; active autoresize mode
-(global-set-key (kbd "M-y") 'helm-show-kill-ring) ;; list kill ring cases
-(global-set-key (kbd "C-c h o") 'helm-occur) ;; find pattern occurences
-
-;; ace-window package
-;;(require 'ace-window)
-;;(global-set-key (kbd "M-p") 'ace-window)
-
-;; key chords
+;; key chord
 (require 'key-chord)
 ;;(setq key-chord-two-keys-delay 0.1) ; default 0.1
 ;;(setq key-chord-one-key-delay 0.2) ; default 0.2
-
-;;(key-chord-define-global "FF" 'find-file)
+(key-chord-mode +1)
 (key-chord-define-global "df" 'forward-char)
 (key-chord-define-global "jk" 'backward-char)
 
-(key-chord-mode +1)
+;; company
+(use-package company
+  :config (add-hook 'prog-mode-hook 'company-mode)
+  :bind (("C-," . company-complete-common)
+		 :map company-active-map
+		 ("C-n" . company-select-next)
+		 ("C-p" . company-select-previous))
+  )
 
-;; keybindings for company mode
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load 'company
+  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
-(global-set-key (kbd "C-,") 'company-complete-common)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
+;; magit
+(use-package magit
+  :defer t
+  ;;:ensure t
+  :bind ("C-x g" . magit-status))
 
-;; add some shortcuts to clean buffer and region
-(global-set-key (kbd "C-x M-t") 'cleanup-region)
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-;;(global-set-key (kbd "M-n") 'next-line)
-;;(global-set-key (kbd "M-p") 'previous-line)
-
-;; scroll bar mode (disable)
-(scroll-bar-mode -1)
-
-;; rainbow identifiers mode - highlighting based on names
+;; rainbow identifiers mode
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
-
+;; configuration
 (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
 
-;; global org-mode configuration
-(require 'ox-latex)
-(require 'ox-html)
+;; org mode
+(use-package org
+  :defer t
+  :mode ("\\.org" . org-mode)
+  :bind (("C-c a" . org-agenda)
+	 ("C-c b" . org-iswitchb))
+  :config
+  (setq org-src-window-setup 'current-window)
+  (require 'org-ac)
+  (defadvice org-agenda (around split-vertically activate)
+  (let ((split-width-threshold 80))  ; or whatever width makes sense for you
+    ad-do-it))
+  (org-ac/config-default)
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-agenda-log-mode-items '(closed clock state)) ;; to see done tasks in org-agenda (by pressing l)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (latex . t)
+     (sh . t)
+     (C . t)
+     (awk . t)
+     ))
+  )
 
-(org-babel-do-load-languages
- 'org-babel-load-languages '((python . t)
-			     (latex . t)
-			     (sh . t)
-			     (C . t)))
+;; helm mode
+(use-package helm
+  :ensure t
+  :diminish helm-mode
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    (setq helm-idle-delay 0.0
+		  helm-input-idle-delay 0.01
+		  helm-quick-update t
+		  helm-M-x-requires-pattern nil
+		  helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("M-x" . helm-M-x)
+		 ("C-x b" . helm-mini)
+		 ("C-x C-f" . helm-find-files)
+		 ("M-i" . helm-swoop)
+		 ("M-y" . helm-show-kill-ring)
+		 ("C-c h o" . helm-occur)
+		 ("M-D" . helm-buffer-run-kill-buffers)
+		 :map helm-map
+		 ("<tab>" . helm-execute-persistent-action)
+		 ("C-<tab>" . helm-select-action)
+		 :map isearch-mode-map
+		 ("M-i" . helm-swoop-from-isearch))
+  )
 
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-iswitchb)
-
-(setq org-latex-listings 'minted
-      org-latex-packages-alist '(("" "minted"))
-      org-latex-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-(defun my/python-setup ()
+;; useful functions
+;; insert date
+(defun cyuss--insert-date ()
+  "Insert a time-stamp according to locale's date and time format."
   (interactive)
-  (company-mode 1)
-  (jedi:setup)
-  (company-jedi 1)
-  (local-set-key (kbd "C-,") 'company-jedi))
+  (insert (format-time-string "%c" (current-time))))
+
+;; search all buffers
+(defun cyuss--search-all-buffers (regexp) 
+  "Search all open buffers for a regex. Open an occur-like window."
+  (interactive "sRegexp: ")
+  (multi-occur-in-matching-buffers "." regexp t))
+
+;; make a temporary file
+(defun cyuss--make-temp-file (name)
+  "Creates a temporary file in the system temp directory, for various purposes."
+  (interactive "sFile name:")
+  (generate-new-buffer name)
+  (switch-to-buffer name)
+  (write-file (concat temporary-file-directory name)))
+
+;; rename file and buffer
+(defun cyuss--rename-this-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+		(filename (buffer-file-name)))
+	(unless filename
+	  (error "Buffer '%s' is not visiting a file!" name))
+	(if (get-buffer new-name)
+		(message "A buffer named '%s' already exists!" new-name)
+	  (progn
+		(rename-file name new-name 1)
+		(rename-buffer new-name)
+		(set-visited-file-name new-name)
+		(set-buffer-modified-p nil)))))
+
+;; define the dependicies when working with python project
+(defun cyuss--python-workenv ()
+  "define my workflow in python"
+  (interactive)
+  (linum-mode 1)
+  (projectile-mode 1)
+  (elpy-enable)
+  (elpy-mode 1)
+  (yas/minor-mode t)
+  (require 'sphinx-doc)
+  (sphinx-doc-mode t))
