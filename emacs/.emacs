@@ -302,3 +302,13 @@
   (yas/minor-mode t)
   (require 'sphinx-doc)
   (sphinx-doc-mode t))
+
+;; undo-tree - visualize your undos and branches
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
