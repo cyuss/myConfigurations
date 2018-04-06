@@ -312,3 +312,8 @@
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
+
+;; swiper configuration
+(use-package swiper
+  :ensure t
+  :bind ("C-c i" . swiper))
