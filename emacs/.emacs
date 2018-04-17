@@ -63,6 +63,8 @@
 
 ;; every time when neotree window is opened, let it find current file and jump to node
 (setq neo-smart-open t)
+;; install the fonts from https://github.com/domtronn/all-the-icons.el/tree/master/fonts
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
 (electric-indent-mode 1)
 
@@ -216,6 +218,9 @@
   (org-ac/config-default)
   (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-log-mode-items '(closed clock state)) ;; to see done tasks in org-agenda (by pressing l)
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (global-set-key (kbd "C-c c") 'org-capture)
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 6)))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
