@@ -131,16 +131,16 @@
 (use-package multiple-cursors
   :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
-		 ("C->" . mc/mark-next-like-this)
-		 ("C-<" . mc/mark-previous-like-this)
-		 ("C-c C-<" . mc/mark-all-like-this))
+	 ("C->" . mc/mark-next-like-this)
+	 ("C-<" . mc/mark-previous-like-this)
+	 ("C-c C-<" . mc/mark-all-like-this))
   )
 
 ;; ace multiple cursors
 (use-package ace-mc
   :defer t
   :bind (("C-)" . ace-mc-add-multiple-cursors)
-		 ("C-M-)" . ace-mc-add-single-cursor))
+	 ("C-M-)" . ace-mc-add-single-cursor))
   )
 
 ;; iedit
@@ -184,9 +184,9 @@
 (use-package company
   :config (add-hook 'prog-mode-hook 'company-mode)
   :bind (("C-," . company-complete-common)
-		 :map company-active-map
-		 ("C-n" . company-select-next)
-		 ("C-p" . company-select-previous))
+	 :map company-active-map
+     	 ("C-n" . company-select-next)
+	 ("C-p" . company-select-previous))
   )
 
 (eval-after-load 'company
@@ -221,6 +221,8 @@
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (global-set-key (kbd "C-c c") 'org-capture)
   (setq org-refile-targets '((org-agenda-files :maxlevel . 6)))
+  (add-hook 'org-mode-hook 'org-hide-block-all)
+  (add-hook 'org-mode-hook 'toggle-truncate-lines)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
