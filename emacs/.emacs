@@ -43,6 +43,10 @@
   (setq solarized-use-variable-pitch nil)
 )
 
+;; encoding system
+(set-language-environment "UTF-8")
+(set-keyboard-coding-system 'utf-8)
+
 ;; start buffers
 (setq inhibit-splash-screen t
       initial-scratch-message nil
