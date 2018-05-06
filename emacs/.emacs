@@ -242,6 +242,7 @@
      (C . t)
      (awk . t)
      ))
+  (setq org-babel-python-command "python3")
   )
 
 ;; helm mode
