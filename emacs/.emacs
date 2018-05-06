@@ -321,6 +321,14 @@
   (require 'sphinx-doc)
   (sphinx-doc-mode t))
 
+;; set virtual environments on emacs
+(use-package pyvenv
+  :ensure t
+  :init
+  (setenv "WORKON_HOME" "~/.virtualenvs")
+  (pyvenv-mode 1)
+  (pyvenv-tracking-mode 1))
+
 ;; undo-tree - visualize your undos and branches
 (use-package undo-tree
   :ensure t
