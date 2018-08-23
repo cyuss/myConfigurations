@@ -88,7 +88,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; key bindings
-(global-set-key (kbd "C-!") 'comment-or-uncomment-region)
+;; (global-set-key (kbd "C-!") 'comment-or-uncomment-region) ;; use comment-dwim-2 instead
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -101,15 +101,27 @@
 (setq column-number-mode t)
 
 ;; autopair mode
-(require 'autopair)
-(autopair-global-mode 1)
+;; (require 'autopair)
+;; (autopair-global-mode 1)
+(use-package autopair
+  ;; dimish autopair and highlight parentheses modes to make a spacy mode line
+  :diminish autopair-mode highlight-parentheses-mode
+  :ensure t
+  :config
+  (autopair-global-mode 1)
+  )
 
 ;; autocomplete
 (require 'auto-complete-config)
 (ac-config-default)
 
 ;; highlight current line
-(global-hl-line-mode +1)
+;; (global-hl-line-mode +1)
+(use-package hl-line
+  ;; visible current line
+  :ensure t
+  :config (global-hl-line-mode)
+  )
 
 ;; windows configuration
 (tool-bar-mode -1)
@@ -137,6 +149,64 @@
 
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
+
+;; spaceline confgiration for mode line
+(use-package spaceline-all-the-icons
+  :ensure t
+  :config
+  (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
+  (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
+  (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
+  (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
+  (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+  )
+
+;; spaceline configuration
+(use-package spaceline
+  :ensure t
+  :config
+  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main))))
+  )
+
+(use-package spaceline-config
+  :ensure spaceline
+  :config
+  (spaceline-helm-mode 1)
+  (spaceline-emacs-theme)
+  )
+
+;; ledger mode
+;; configuration for ledger mode
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-clear-whole-transactions 1)
+  :config
+  (setq ledger-binary-path "/usr/local/bin/ledger")
+  ;; (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+  :mode "\\.ledger\\'"
+  )
+
+;; better solution for commenting lines
+(use-package comment-dwim-2
+  :ensure t
+  :bind ("C-;" . comment-dwim-2)
+  :config (setq comment-dwim-2--inline-comment-behavior 'reindent-comment)
+  )
+
+;; git gutter, to show diffs
+(use-package git-gutter
+  ;; show diff hunks in gutter + stage/unstage from buffer
+  :ensure t
+  :diminish git-gutter-mode
+  :config (progn
+            (bind-keys
+             ("C-x C-g C-n" . git-gutter:next-hunk)
+             ("C-x C-g C-p" . git-gutter:previous-hunk)
+             ("C-x C-g C-s" . git-gutter:stage-hunk)
+             ("C-x C-g C-r" . git-gutter:revert-hunk))
+            (global-git-gutter-mode))
+  )
 
 ;; multiple cursors
 (use-package multiple-cursors
