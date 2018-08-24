@@ -261,6 +261,24 @@
 (key-chord-define-global "df" 'forward-char)
 (key-chord-define-global "jk" 'backward-char)
 
+;; set company mode to complete org keywords
+;; to use it, add
+;; (add-to-list 'company-backends 'org-keyword-backend)
+(defun org-keyword-backend (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'org-keyword-backend))
+    (prefix (and (eq major-mode 'org-mode)
+                 (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
+                       t)))
+    (candidates (mapcar #'upcase
+                        (cl-remove-if-not
+                         (lambda (c) (string-prefix-p arg c))
+                         (pcomplete-completions))))
+    (ignore-case t)
+    (duplicates t))
+  )
+
 ;; company
 (use-package company
   :config (add-hook 'prog-mode-hook 'company-mode)
