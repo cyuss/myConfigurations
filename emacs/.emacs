@@ -141,6 +141,29 @@
   :commands highlight-parentheses-mode
   )
 
+;; set google translate
+(use-package google-translate
+  :ensure t
+  :config
+  (setq google-translate-translation-directions-alist
+	'(("de" . "en") ("en" . "de") ("ch" . "en") ("en" . "ch")))
+  (setq google-translate-show-phonetic t)
+  (global-set-key (kbd "C-c d") 'google-translate-at-point)
+  )
+
+;; a dictionary for chinese
+(use-package youdao-dictionary
+  :ensure t
+  :config
+  ;; Enable cache
+  ;; (setq url-automatic-caching nil)
+  ;; Keybinding
+  (global-set-key (kbd "C-c y") 'youdao-dictionary-search-at-point)
+  (global-set-key (kbd "C-c Y") 'youdao-dictionary-search-at-point+)
+  ;; Enable Chinese word segmentation support (支持中文分词)
+  ;; (setq youdao-dictionary-use-chinese-word-segmentation t)
+  )
+
 ;; miniedit
 (use-package miniedit
   :commands minibuffer-edit
