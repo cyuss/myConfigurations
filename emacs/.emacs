@@ -105,7 +105,7 @@
 ;; (autopair-global-mode 1)
 (use-package autopair
   ;; dimish autopair and highlight parentheses modes to make a spacy mode line
-  :diminish autopair-mode highlight-parentheses-mode
+  :diminish autopair-mode
   :ensure t
   :config
   (autopair-global-mode 1)
@@ -129,12 +129,17 @@
 (menu-bar-mode -99)
 (scroll-bar-mode -1)
 
-;; highlight surrounding parentheses
-(define-globalized-minor-mode global-highlight-parentheses-mode
-  highlight-parentheses-mode
-  (lambda ()
-	(highlight-parentheses-mode t)))
-(global-highlight-parentheses-mode t)
+;; define highlight-parentheses-mode
+;; (define-globalized-minor-mode global-highlight-parentheses-mode
+;;   highlight-parentheses-mode
+;;   (lambda ()
+;;     (highlight-parentheses-mode t)))
+;; (global-highlight-parentheses-mode t)
+(use-package highlight-parentheses
+  :ensure t
+  :diminish highlight-parentheses-mode
+  :commands highlight-parentheses-mode
+  )
 
 ;; miniedit
 (use-package miniedit
