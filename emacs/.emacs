@@ -281,6 +281,23 @@
   :bind (("M-p" . ace-window))
   )
 
+;; add bookmark package; open if bookmark is file; else call helm-find-files
+(use-package bookmark
+  :defer t
+  :config
+  (progn
+    (defun bookmark-find-from-dir-or-default (orig-fun bmk-record)
+      "Calls through unless bookmark is a directory, in which
+             case, calls helm-find-files."
+      (let ((file (bookmark-get-filename bmk-record)))
+	(if (file-directory-p file)
+	    (let ((default-directory file))
+	      (call-interactively 'helm-find-files))
+	  (funcall orig-fun bmk-record))))
+    (advice-add `bookmark-default-handler
+		:around #'bookmark-find-from-dir-or-default))
+  )
+
 ;; key chord
 (require 'key-chord)
 ;;(setq key-chord-two-keys-delay 0.1) ; default 0.1
