@@ -30,10 +30,29 @@
 ;;(require 'diminish) ;; if we want to use :diminish
 (require 'bind-key) ;; if we want to use :bind
 
+;; Setup diminish to keep the mode line nice
+(use-package diminish
+  :ensure t
+  ;; :diminish auto-revert-mode
+  ;; :diminish abbrev-mode
+  :diminish eldoc-mode)
+
 (setq custom-file "~/.emacs.d/custom-settings.el")
 (load custom-file t)
 
+;; backup files
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq version-control t)
+(setq delete-old-versions -1)
+
+;; set the font
+;; Monaco in Mac Os X
+;; Consolas in Windows
+;; Inconsolata in Linux
 (set-default-font "Consolas-15")
+
+;; change the line spacing for better visualization
+(setq-default line-spacing 5)
 
 ;; theme installation
 (use-package solarized-theme
@@ -42,6 +61,15 @@
   :init
   (setq solarized-use-variable-pitch nil)
 )
+
+;; fix the $PATH environment variable
+;; inherit from the shel environment
+;; using it in Os X
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  (exec-path-from-shell-initialize))
+
 
 ;; encoding system
 (set-language-environment "UTF-8")
@@ -52,12 +80,31 @@
       initial-scratch-message nil
       initial-major-mode 'org-mode)
 
+;; frames configuration
+(tool-bar-mode -1)
+(display-time-mode 1)
+(menu-bar-mode -99)
+(scroll-bar-mode -1)
+
 ;; marking text
 (delete-selection-mode t)
 (transient-mark-mode t)
 (setq x-select-enable-clipboard t)
 
+;; define highlight-parentheses-mode
+(use-package highlight-parentheses
+  :ensure t
+  :diminish highlight-parentheses-mode
+  :commands highlight-parentheses-mode)
+
+(defun electric-pair ()
+  "If at end of line, insert character pair without surrounding spaces. Otherwise, just insert the typed character."
+  (interactive)
+  (if (eolp) (let (parens-require-spaces) (insert-pair)) (self-insert-command 1))
+  )
+
 ;; end line marker
+;; show ~ at the end of the file for empty lines
 (setq-default indicate-empty-lines t)
 (when (not indicate-empty-lines)
   (toggle-indicate-empty-lines))
@@ -79,11 +126,6 @@
 
 (electric-indent-mode 1)
 
-;; backup files
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-(setq version-control t)
-(setq delete-old-versions -1)
-
 ;; yes and no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -100,6 +142,11 @@
 ;; column number mode
 (setq column-number-mode t)
 
+;; add autocomplete in eshell
+(use-package esh-autosuggest
+  :ensure t
+  :hook (eshell-mode . esh-autosuggest-mode))
+
 ;; autopair mode
 ;; (require 'autopair)
 ;; (autopair-global-mode 1)
@@ -112,8 +159,15 @@
   )
 
 ;; autocomplete
-(require 'auto-complete-config)
-(ac-config-default)
+;; (require 'auto-complete-config)
+;; (ac-config-default)
+;; to diminish autocomplete mode
+(use-package auto-complete
+  :ensure t
+  :diminish auto-complete-mode
+  :config
+  (require 'auto-complete-config)
+  (ac-config-default))
 
 ;; highlight current line
 ;; (global-hl-line-mode +1)
@@ -122,12 +176,6 @@
   :ensure t
   :config (global-hl-line-mode)
   )
-
-;; windows configuration
-(tool-bar-mode -1)
-(display-time-mode 1)
-(menu-bar-mode -99)
-(scroll-bar-mode -1)
 
 ;; define highlight-parentheses-mode
 ;; (define-globalized-minor-mode global-highlight-parentheses-mode
@@ -146,7 +194,7 @@
   :ensure t
   :config
   (setq google-translate-translation-directions-alist
-	'(("de" . "en") ("en" . "de") ("ch" . "en") ("en" . "ch")))
+	'(("de" . "en") ("en" . "de")))
   (setq google-translate-show-phonetic t)
   (global-set-key (kbd "C-c d") 'google-translate-at-point)
   )
@@ -203,6 +251,14 @@
   (spaceline-emacs-theme)
   )
 
+;; set snippets for emacs
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+  (yas-minor-mode t)
+  )
+
 ;; ledger mode
 ;; configuration for ledger mode
 (use-package ledger-mode
@@ -212,8 +268,7 @@
   :config
   (setq ledger-binary-path "/usr/local/bin/ledger")
   ;; (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-  :mode "\\.ledger\\'"
-  )
+  :mode "\\.ledger\\'")
 
 ;; better solution for commenting lines
 (use-package comment-dwim-2
@@ -326,15 +381,96 @@
 
 ;; company
 (use-package company
-  :config (add-hook 'prog-mode-hook 'company-mode)
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'company-mode)
+  (add-to-list 'company-backends 'company-dabbrev-code)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'org-keyword-backend)
   :bind (("C-," . company-complete-common)
 	 :map company-active-map
      	 ("C-n" . company-select-next)
-	 ("C-p" . company-select-previous))
+	 ("C-p" . company-select-previous)))
+
+;; (eval-after-load 'company
+;;   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+(use-package company-quickhelp
+  :ensure t
+  :after company
+  :config (company-quickhelp-mode))
+
+;; set virtual environments on emacs
+(use-package pyvenv
+  :ensure t
+  :init
+  (setenv "WORKON_HOME" "~/.virtualenvs")
+  (pyvenv-mode 1)
+  (pyvenv-tracking-mode 1))
+
+;; undo-tree - visualize your undos and branches
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+
+;; swiper configuration
+(use-package swiper
+  :ensure t
+  :bind ("C-c i" . swiper))
+
+(use-package projectile
+  :ensure t
+  :config
+  ;; activate projectile mode onli if available; otherwise nothing
+  (setq projectile-mode-line
+	'(:eval (if (projectile-project-p)
+		    (projectile-mode 1)
+                  ""))))
+
+;; it shows which combos are setup while we are typing
+(use-package which-key
+  :ensure t
+  :diminish which-key-mode
+  :config
+  (which-key-mode 1)
   )
 
-(eval-after-load 'company
-  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+(use-package devdocs
+  :defer t
+  :ensure t
+  )
+
+;; Dockerfile & Docker-compose modes
+(use-package dockerfile-mode
+  :defer t
+  :ensure t)
+(use-package docker-compose-mode
+  :defer t
+  :ensure t)
+
+(use-package yaml-mode
+  :defer t
+  :ensure t)
+
+(use-package go-mode
+  :defer t
+  :ensure t
+  :mode ("\\.go$" . go-mode))
+
+;; JavaScript
+(use-package js2-mode
+  :ensure t
+  :defer t
+  :config
+  (use-package ac-js2
+    :ensure t
+    :defer t
+    :config
+    (add-hook 'js2-mode-hook 'ac-js2-mode)))
 
 ;; magit
 (use-package magit
@@ -348,6 +484,8 @@
 (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face)
 
 ;; org mode
+(setq org-agenda-repeating-timestamp-show-all nil)
+(setq org-habit-show-habits-only-for-today nil)
 (use-package org
   :defer t
   :mode ("\\.org" . org-mode)
@@ -367,6 +505,22 @@
   (setq org-refile-targets '((org-agenda-files :maxlevel . 6)))
   (add-hook 'org-mode-hook 'org-hide-block-all)
   (add-hook 'org-mode-hook 'toggle-truncate-lines)
+  (require 'org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  ;; set company mode to complete org keywords
+  (defun org-keyword-backend (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'org-keyword-backend))
+      (prefix (and (eq major-mode 'org-mode)
+                   (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
+			 t)))
+      (candidates (mapcar #'upcase
+                          (cl-remove-if-not
+                           (lambda (c) (string-prefix-p arg c))
+                           (pcomplete-completions))))
+      (ignore-case t)
+      (duplicates t)))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
@@ -375,7 +529,7 @@
      (C . t)
      (awk . t)
      ))
-  (setq org-babel-python-command "python3")
+  ;; (setq org-babel-python-command "python3")
   )
 
 ;; helm mode
@@ -387,23 +541,23 @@
     (require 'helm-config)
     (setq helm-candidate-number-limit 100)
     (setq helm-idle-delay 0.0
-		  helm-input-idle-delay 0.01
-		  helm-quick-update t
-		  helm-M-x-requires-pattern nil
-		  helm-ff-skip-boring-files t)
+	  helm-input-idle-delay 0.01
+	  helm-quick-update t
+	  helm-M-x-requires-pattern nil
+	  helm-ff-skip-boring-files t)
     (helm-mode))
   :bind (("M-x" . helm-M-x)
-		 ("C-x b" . helm-mini)
-		 ("C-x C-f" . helm-find-files)
-		 ("M-i" . helm-swoop)
-		 ("M-y" . helm-show-kill-ring)
-		 ("C-c h o" . helm-occur)
-		 ("M-D" . helm-buffer-run-kill-buffers)
-		 :map helm-map
-		 ("<tab>" . helm-execute-persistent-action)
-		 ("C-<tab>" . helm-select-action)
-		 :map isearch-mode-map
-		 ("M-i" . helm-swoop-from-isearch))
+	 ("C-x b" . helm-mini)
+	 ("C-x C-f" . helm-find-files)
+	 ("M-i" . helm-swoop)
+	 ("M-y" . helm-show-kill-ring)
+	 ("C-c h o" . helm-occur)
+	 ("M-D" . helm-buffer-run-kill-buffers)
+	 :map helm-map
+	 ("<tab>" . helm-execute-persistent-action)
+	 ("C-<tab>" . helm-select-action)
+	 :map isearch-mode-map
+	 ("M-i" . helm-swoop-from-isearch))
   )
 
 ;; useful functions
@@ -454,29 +608,6 @@
   (yas/minor-mode t)
   (require 'sphinx-doc)
   (sphinx-doc-mode t))
-
-;; set virtual environments on emacs
-(use-package pyvenv
-  :ensure t
-  :init
-  (setenv "WORKON_HOME" "~/.virtualenvs")
-  (pyvenv-mode 1)
-  (pyvenv-tracking-mode 1))
-
-;; undo-tree - visualize your undos and branches
-(use-package undo-tree
-  :ensure t
-  :diminish undo-tree-mode
-  :config
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
-
-;; swiper configuration
-(use-package swiper
-  :ensure t
-  :bind ("C-c i" . swiper))
 
 (defun duplicate-line (arg)
   "Duplicate current line, leaving point in lower line."
